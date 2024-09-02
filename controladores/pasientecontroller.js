@@ -5,7 +5,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-const medicoBD = require("./../modelos/pasienteModel.js");
+const pasienteBD= require("./../modelos/pasienteModel.js");
 
 // -------------------------------------------------------- 
 // --rutas de escucha (endpoint) dispoibles para pasiente--- 
