@@ -1,3 +1,4 @@
+//--- requires ------------------------------------------
 const express = require('express');
 
 const app = express();
@@ -5,18 +6,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-const medicoBD = require("./../modelos/pasienteModel.js");
+const ingresoBD = require("./../modelos/ingresomodel.js");
 
 // -------------------------------------------------------- 
-// --rutas de escucha (endpoint) dispoibles para pasiente--- 
+// --rutas de escucha (endpoint) dispoibles para ingreso --- 
 // --------------------------------------------------------
 
 app.get("/", listarTodo);
-app.get("/:nnssBIGNT", getBynnssBIGNT);
+app.get("/:FECHA_INGRESO", getByfecha_ingreso);
 app.post('/create', crear);
-app.get('/:nombre', obtenerpasiente);
-app.delete("/:nombre", eliminarpasiente);
-app.put("/:nombre", modificarpasiente);
+app.get('/:FECHA_INGRESO', obteneringreso);
+app.delete("/:FECHA_INGRESO", eliminaringreso);
+app.put("/:FECHA_INGRESO", modificaringreso);
 
 
 
@@ -30,9 +31,9 @@ app.put("/:nombre", modificarpasiente);
 // ---------FUNCIONES UTILIZADAS EN ENDPOINTS -------------
 // --------------------------------------------------------
 
-function getBynnssBIGNT(req, res) {
-    nnssBIGNT= req.params.nnssBIGNT
-    pasiente = pasienteBD.metodos.getBynnssBIGNT(nnssBIGNT, (err, result) => {
+function getByFECHA_INGRESO(req, res) {
+    especialidad = req.params.FECHA_INGRESO
+    ingresoBD = ingresoBD.metodos.getByFECHA_INGRESO(FECHA_INGRESO, (err, result) => {
         if (err) {
             res.send(err);
         } else {
@@ -43,7 +44,7 @@ function getBynnssBIGNT(req, res) {
 }
 
 function listarTodo(req, res) {
-    pasiente = pasienteBD.metodos.getAll((err, result) => {
+    ingreso = ingresoBD.metodos.getAll((err, result) => {
         if (err) {
             res.send(err);
         } else {
@@ -54,7 +55,7 @@ function listarTodo(req, res) {
 }
 
 function crear(req, res) {
-    pasienteBD.metodos.crearpasiente(req.body, (err, exito) => {
+    ingresoBD.metodos.crearingreso(req.body, (err, exito) => {
         if (err) {
             res.send(err);
         } else {
@@ -64,9 +65,9 @@ function crear(req, res) {
 }
 
 
-function obtenerpasiente(req, res) {
-    let nnssBIGNT = req.params.nnssBIGNT;
-    pasienteBD.metodos.getpasiente(nnssBIGNT, () => {
+function obteneringreso(req, res) {
+    let FECHA_INGRESO = req.params.FECHA_INGRESO;
+    ingresoBD.metodos.getingreso(FECHA_INGRESO, () => {
         (err, exito) => {
             if (err) {
                 res.status(500).send(err)
@@ -77,25 +78,25 @@ function obtenerpasiente(req, res) {
     });
 }
 
-//app.put("/:matricula", modificarpasiente);
+//app.put("/:FECHA_INGRESO", modificaringreso);
 
 
 
-function modificarpasiente(req, res) {
-    datospasiente = req.body;
-    deEstepasiente = req.params.nnssBIGNT;
-    pasienteBD.metodos.update(datospasiente, deEstepasiente, (err, exito) => {
+function modificaringreso(req, res) {
+    datosingreso = req.body;
+    deEsteingreso = req.params.FECHA_INGRESO;
+    ingresoBD.metodos.update(datosingreso, deEsteingreso, (err, exito) => {
         if (err) {
             res.status(500).send(err)
         } else {
-            res.status(200).send(exito) //pasiente modificado
+            res.status(200).send(exito) //ingreso modificado
         }
     });
 }
 
 
-function eliminarpasiente(req, res) {
-    medicoBD.metodos.deletepasiente(req.params.matricula, (err, exito) => {
+function eliminarMedico(req, res) {
+    medicoBD.metodos.deleteMedico(req.params.matricula, (err, exito) => {
         if (err) {
             res.status(500).json(err);
         } else {
