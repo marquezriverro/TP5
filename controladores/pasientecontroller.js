@@ -1,3 +1,4 @@
+//--- requires ------------------------------------------
 const express = require('express');
 
 const app = express();
@@ -5,20 +6,22 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-const medicoBD = require("./../modelos/pasienteModel.js");
+const medicoBD = require("../modelos/medicosModel.js");
 
 // -------------------------------------------------------- 
-// --rutas de escucha (endpoint) dispoibles para pasiente--- 
+// --rutas de escucha (endpoint) dispoibles para MEDICO --- 
 // --------------------------------------------------------
 
 app.get("/", listarTodo);
-app.get("/:nnssBIGNT", getBynnssBIGNT);
+
+app.get("/:especialidad", getByEspecialidad);
+
+
+
 app.post('/create', crear);
-app.get('/:nombre', obtenerpasiente);
-app.delete("/:nombre", eliminarpasiente);
-app.put("/:nombre", modificarpasiente);
-
-
+app.get('/:nhc', obtenerPaciente);
+app.delete("/:nhc", eliminarMedico);
+app.put("/:nhc", modificarMedico);
 
 
 
@@ -30,9 +33,8 @@ app.put("/:nombre", modificarpasiente);
 // ---------FUNCIONES UTILIZADAS EN ENDPOINTS -------------
 // --------------------------------------------------------
 
-function getBynnssBIGNT(req, res) {
-    nnssBIGNT= req.params.nnssBIGNT
-    pasiente = pasienteBD.metodos.getBynnssBIGNT(nnssBIGNT, (err, result) => {
+function listarTodo(req, res) {
+    medicos = medicoBD.metodos.getAll((err, result) => {
         if (err) {
             res.send(err);
         } else {
@@ -42,8 +44,8 @@ function getBynnssBIGNT(req, res) {
     );
 }
 
-function listarTodo(req, res) {
-    pasiente = pasienteBD.metodos.getAll((err, result) => {
+function getByEspecialidad(req, res) {
+    medicos = pacienteBD.metodos.getByEspecialidad((err, result) => {
         if (err) {
             res.send(err);
         } else {
@@ -54,7 +56,7 @@ function listarTodo(req, res) {
 }
 
 function crear(req, res) {
-    pasienteBD.metodos.crearpasiente(req.body, (err, exito) => {
+    medicoBD.metodos.crearMedico(req.body, (err, exito) => {
         if (err) {
             res.send(err);
         } else {
@@ -64,9 +66,9 @@ function crear(req, res) {
 }
 
 
-function obtenerpasiente(req, res) {
-    let nnssBIGNT = req.params.nnssBIGNT;
-    pasienteBD.metodos.getpasiente(nnssBIGNT, () => {
+function obtenerPaciente(req, res) {
+    let matricula = req.params.matricula;
+    medicoBD.metodos.getMedico(matricula, () => {
         (err, exito) => {
             if (err) {
                 res.status(500).send(err)
@@ -77,25 +79,25 @@ function obtenerpasiente(req, res) {
     });
 }
 
-//app.put("/:matricula", modificarpasiente);
+//app.put("/:matricula", modificarMedico);
 
 
 
-function modificarpasiente(req, res) {
-    datospasiente = req.body;
-    deEstepasiente = req.params.nnssBIGNT;
-    pasienteBD.metodos.update(datospasiente, deEstepasiente, (err, exito) => {
+function modificarMedico(req, res) {
+    datosMedico = req.body;
+    deEsteMedico = req.params.matricula;
+    medicoBD.metodos.update(datosMedico, deEsteMedico, (err, exito) => {
         if (err) {
             res.status(500).send(err)
         } else {
-            res.status(200).send(exito) //pasiente modificado
+            res.status(200).send(exito) //medico modificado
         }
     });
 }
 
 
-function eliminarpasiente(req, res) {
-    medicoBD.metodos.deletepasiente(req.params.matricula, (err, exito) => {
+function eliminarMedico(req, res) {
+    medicoBD.metodos.deleteMedico(req.params.matricula, (err, exito) => {
         if (err) {
             res.status(500).json(err);
         } else {
