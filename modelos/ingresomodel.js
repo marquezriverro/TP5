@@ -16,9 +16,9 @@ connection.connect((err) => {
 
 var metodos = {}
 
-// --> app.get("/", listarTodo());  --> pasientes = pasientesBD.getAll((err, result) => {}
+// --> app.get("/", listarTodo());  --> ingreso = ingresosBD.getAll((err, result) => {}
 metodos.getAll = function (callback) {
-    consulta = "select * from pasiente";
+    consulta = "select * from ingreso";
     connection.query(consulta, function (err, resultados, fields) {
         if (err) {
             callback(err);
@@ -32,16 +32,16 @@ metodos.getAll = function (callback) {
     });
 }
 
-// --> app.get('/:nnssBIGNT', obtenerpasiente);  -->  pasienteBD.getpasiente(nnssBIGNT, () => {})
+// --> app.get('/:fecha_ingreso', obtenerpasiente);  -->  ingresoBD.getpasingreso(fecha_ingreso ,() => {})
 metodos.getMedico = function (matricula, callback) {
-    consulta = "select * from pasiente where nnssBIGNT = ?";
+    consulta = "select * from ingreso where fecha_ingreso = ?";
 
-    connection.query(consulta, nnssBIGNT, function (err, resultados, fields) {
+    connection.query(consulta, fecha_ingreso, function (err, resultados, fields) {
         if (err) {
             callback(err);
         } else {
             if (resultados.length == 0) {
-                callback(undefined, "no se encontro un pasiente con la nnssBIGNT:" +nnssBIGNT )
+                callback(undefined, "no se encontro un ingreso con la fecha_ingreso:" +nnssBIGNT )
             } else {
                 callback(undefined, {
                     messaje: "Resultados de la consulta",
@@ -53,15 +53,15 @@ metodos.getMedico = function (matricula, callback) {
     });
 
 }
-metodos.getBynnssBIGNT = function (nnssBIGNT, callback) {
-    consulta = "select * from pasiente where nombre = ?";
+metodos.getByfecha_ingreso = function (nnssBIGNT, callback) {
+    consulta = "select * from ingreso where nombre = ?";
 
     connection.query(consulta,nombre , function (err, resultados, fields) {
         if (err) {
             callback(err);
         } else {
             if (resultados.length == 0) {
-                callback(undefined, "no se encontro un pasiente con nombre :" + nombre)
+                callback(undefined, "no se encontro un ingreso con nombre :" + nombre)
             } else {
                 callback(undefined, {
                     messaje: "Resultados de la consulta con nombre" + nombre,
@@ -74,18 +74,18 @@ metodos.getBynnssBIGNT = function (nnssBIGNT, callback) {
 
 }
 
-//--> app.put("/:nnssBIGNT", modificarpasiente);  --> function modificarpasiente(req, res) {}
+//--> app.put("/:fecha_ingreso", modificaringreso);  --> function modificaringreso(req, res) {}
 metodos.update = function (datosMedico, deTalMedico, callback) {
 
     datos = [
-        datospasiente.nnssBIGNT,
-        datospasiente.nombre,
-        datospasiente.apellido,
-        datospasiente.nro_cama,
-        datospasiente.observaciones,
-        parseInt(deTalpasiente)
+        datosingreso.nnssBIGNT,
+        datosingreso.nombre,
+        datosingreso.apellido,
+        datosingreso.nro_cama,
+        datosingreso.observaciones,
+        parseInt(deTalingreso)
     ];
-    consulta = "update pasiente set nnssBIGNT  = ?, nombre = ?, apellido = ?, nro_cama = ?, observaciones = ? WHERE nnssBIGNT = ?";
+    consulta = "update ingreso set fecha_ingreso = ?, nombre = ?, apellido = ?, nro_cama = ?, observaciones = ? WHERE fecha_ingreso = ?";
 
 
     connection.query(consulta, datos, (err, rows) => {
@@ -96,13 +96,13 @@ metodos.update = function (datosMedico, deTalMedico, callback) {
             if (rows.affectedRows == 0) {
                 callback(undefined, {
                     message:
-                        `no se enocntro un pasiente con la matricula el medico ${deTalpasiente}`,
+                        `no se enocntro un ingreso con la fecha_ingreso  ${deTalingreso}`,
                     detail: rows,
                 })
             } else {
                 callback(undefined, {
                     message:
-                        `el pasiente ${datosMedico.nombre} se actualizo correctamente`,
+                        `el ingreso ${datosMedico.nombre} se actualizo correctamente`,
                     detail: rows,
                 })
             }
@@ -113,23 +113,23 @@ metodos.update = function (datosMedico, deTalMedico, callback) {
 
 }
 
-//--> pasienteBD.metodos.crearpasiente(req.body, (err, exito) => {});
-metodos.crearpasiente = function (datospasiente, callback) {
-    pasiente = [
-        datospasiente.nnssBIGNT,
-        datospasiente.nombre,
-        datospasiente.apellido,
-        datospasiente.nro_cama,
-        datospasiente.observaciones,
+//--> ingresoBD.metodos.crearingreso(req.body, (err, exito) => {});
+metodos.crearingreso = function (datospasiente, callback) {
+    ingreso = [
+        datosingreso.Dni,
+        datosingreso.nombre,
+        datosingreso.apellido,
+        datosingreso.nro_cama,
+        datosingreso.historial_pasiente,
     ];
     consulta =
-        "INSERT INTO consulte (nnssBIGNT, nombre, apellido, nro_cama, observaciones) VALUES (?, ?, ?, ?, ?)";
+        "INSERT INTO consulte (Dni, nombre, apellido, nro_cama, historial_pasiente) VALUES (?, ?, ?, ?, ?)";
 
-    connection.query(consulta, medico, (err, rows) => {
+    connection.query(consulta, ingreso, (err, rows) => {
         if (err) {
             if (err.code = "ER_DUP_ENTRY") {
                 callback({
-                    message: "ya existe un pasiente con ese nnssBIGNT " + datospasiente.nnssBIGNT,
+                    message: "ya existe un ingreso con ese Dni  " + datospasiente.nnssBIGNT,
                     detail: err.sqlMessage
                 })
             } else {
@@ -142,17 +142,17 @@ metodos.crearpasiente = function (datospasiente, callback) {
 
         } else {
             callback(undefined, {
-                message: "el pasiente " + datospasiente.nombre + " " + datospasiente.apellido + "se registro correctamente",
+                message: "el ingreso" + datosingreso.Dni + " " + datosingreso.fecha_ingreso + "se registro correctamente",
                 detail: rows,
             })
         }
     });
 }
 
-// -->  app.delete("/:nnssBIGNT", eliminarpasiente);   -->   pasienteBD.metodos.deletepasiente(req.params.nnssBIGNT, (err, exito) => {}); 
-metodos.deleteMedico = function (matricula, callback) {
-    query = "delete from pasiente where matricula = ?";
-    connection.query(query,nnssBIGNT , function (err, rows, fields) {
+// -->  app.delete("/:fecha_ingreso", eliminaringreso);   -->   ingresoBD.metodos.deleteingreso(req.params.nnssBIGNT, (err, exito) => {}); 
+metodos.deleteingreso = function (fecha_ingreso, callback) {
+    query = "delete from ingreso where fecha_ingreso = ?";
+    connection.query(query,fecha_ingreso , function (err, rows, fields) {
         if (err) {
             callback({
                 message: "ha ocurrido un error",
@@ -161,9 +161,9 @@ metodos.deleteMedico = function (matricula, callback) {
         }
 
         if (rows.affectedRows == 0) {
-            callback(undefined, "No se encontro un pasiente con la nnssBIGNT " + nnssBIGNT);
+            callback(undefined, "No se encontro un pasiente con la  fecha_ingreso" + fecha_ingreso);
         } else {
-            callback(undefined, "el pasiente " + nnssBIGNT + " fue eliminado de la Base de datos");
+            callback(undefined, "el ingreso " + fecha_ingreso + " fue eliminado de la Base de datos");
         }
     });
 }
