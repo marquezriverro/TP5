@@ -1,18 +1,5 @@
 require('rootpath')();
-
-const mysql = require("mysql");
-const configuracion = require("config.json");
-const { query } = require('express');
-// Agregue las credenciales para acceder a su base de datos
-const connection = mysql.createConnection(configuracion.database);
-
-connection.connect((err) => {
-    if (err) {
-        console.log(err.code);
-    } else {
-        console.log("BD conectada");
-    }
-});
+const ingreso = require("./BD_conect");
 
 var metodos = {}
 
@@ -36,7 +23,7 @@ metodos.getAll = function (callback) {
 metodos.getMedico = function (matricula, callback) {
     consulta = "select * from ingreso where fecha_ingreso = ?";
 
-    connection.query(consulta, fecha_ingreso, function (err, resultados, fields) {
+ingreso.query(consulta, fecha_ingreso, function (err, resultados, fields) {
         if (err) {
             callback(err);
         } else {
@@ -56,7 +43,7 @@ metodos.getMedico = function (matricula, callback) {
 metodos.getByfecha_ingreso = function (nnssBIGNT, callback) {
     consulta = "select * from ingreso where nombre = ?";
 
-    connection.query(consulta,nombre , function (err, resultados, fields) {
+    ingreso.query(consulta,nombre , function (err, resultados, fields) {
         if (err) {
             callback(err);
         } else {
@@ -88,7 +75,7 @@ metodos.update = function (datosMedico, deTalMedico, callback) {
     consulta = "update ingreso set fecha_ingreso = ?, nombre = ?, apellido = ?, nro_cama = ?, observaciones = ? WHERE fecha_ingreso = ?";
 
 
-    connection.query(consulta, datos, (err, rows) => {
+    ingreso.query(consulta, datos, (err, rows) => {
         if (err) {
             callback(err);
         } else {
@@ -125,7 +112,7 @@ metodos.crearingreso = function (datospasiente, callback) {
     consulta =
         "INSERT INTO consulte (Dni, nombre, apellido, nro_cama, historial_pasiente) VALUES (?, ?, ?, ?, ?)";
 
-    connection.query(consulta, ingreso, (err, rows) => {
+    ingreso.query(consulta, ingreso, (err, rows) => {
         if (err) {
             if (err.code = "ER_DUP_ENTRY") {
                 callback({
@@ -152,7 +139,7 @@ metodos.crearingreso = function (datospasiente, callback) {
 // -->  app.delete("/:fecha_ingreso", eliminaringreso);   -->   ingresoBD.metodos.deleteingreso(req.params.nnssBIGNT, (err, exito) => {}); 
 metodos.deleteingreso = function (fecha_ingreso, callback) {
     query = "delete from ingreso where fecha_ingreso = ?";
-    connection.query(query,fecha_ingreso , function (err, rows, fields) {
+    ingreso.query(query,fecha_ingreso , function (err, rows, fields) {
         if (err) {
             callback({
                 message: "ha ocurrido un error",
