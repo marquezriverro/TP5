@@ -1,25 +1,13 @@
 require('rootpath')();
 
-const mysql = require("mysql");
-const configuracion = require("config.json");
-const { query } = require('express');
-// Agregue las credenciales para acceder a su base de datos
-const connection = mysql.createConnection(configuracion.database);
-
-connection.connect((err) => {
-    if (err) {
-        console.log(err.code);
-    } else {
-        console.log("BD conectada");
-    }
-});
+const pasiente = require("./BD_conect");
 
 var metodos = {}
 
 // --> app.get("/", listarTodo());  --> pasientes = pasientesBD.getAll((err, result) => {}
 metodos.getAll = function (callback) {
     consulta = "select * from pasiente";
-    connection.query(consulta, function (err, resultados, fields) {
+    pasiente.query(consulta, function (err, resultados, fields) {
         if (err) {
             callback(err);
             return;
@@ -33,10 +21,10 @@ metodos.getAll = function (callback) {
 }
 
 // --> app.get('/:nnssBIGNT', obtenerpasiente);  -->  pasienteBD.getpasiente(nnssBIGNT, () => {})
-metodos.getMedico = function (matricula, callback) {
+metodos.getpasiente = function (matricula, callback) {
     consulta = "select * from pasiente where nnssBIGNT = ?";
 
-    connection.query(consulta, nnssBIGNT, function (err, resultados, fields) {
+    pasiente.query(consulta, nnssBIGNT, function (err, resultados, fields) {
         if (err) {
             callback(err);
         } else {
@@ -56,7 +44,7 @@ metodos.getMedico = function (matricula, callback) {
 metodos.getBynnssBIGNT = function (nnssBIGNT, callback) {
     consulta = "select * from pasiente where nombre = ?";
 
-    connection.query(consulta,nombre , function (err, resultados, fields) {
+    pasiente.query(consulta,nombre , function (err, resultados, fields) {
         if (err) {
             callback(err);
         } else {
@@ -88,7 +76,7 @@ metodos.update = function (datosMedico, deTalMedico, callback) {
     consulta = "update pasiente set nnssBIGNT  = ?, nombre = ?, apellido = ?, nro_cama = ?, observaciones = ? WHERE nnssBIGNT = ?";
 
 
-    connection.query(consulta, datos, (err, rows) => {
+    pasiente.query(consulta, datos, (err, rows) => {
         if (err) {
             callback(err);
         } else {
@@ -125,7 +113,7 @@ metodos.crearpasiente = function (datospasiente, callback) {
     consulta =
         "INSERT INTO consulte (nnssBIGNT, nombre, apellido, nro_cama, observaciones) VALUES (?, ?, ?, ?, ?)";
 
-    connection.query(consulta, medico, (err, rows) => {
+    pasiente.query(consulta, medico, (err, rows) => {
         if (err) {
             if (err.code = "ER_DUP_ENTRY") {
                 callback({
