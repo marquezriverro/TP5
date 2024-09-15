@@ -16,6 +16,9 @@ const configuracion = require("./config.json");
 
 
 app.use("/api/medico", require("./controladores/medicoController.js"));
+app.use("/api/pasiente, require("./controladores/pacienteController.js"));
+  app.use("/api/ingreso, reqire("./controladores/ingresoController.js));
+  
 
 
 //const pacienteController = require("./controladores/pacienteController.js");
