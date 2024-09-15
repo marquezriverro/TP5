@@ -63,7 +63,7 @@ metodos.getBynnssBIGNT = function (nnssBIGNT, callback) {
 }
 
 //--> app.put("/:nnssBIGNT", modificarpasiente);  --> function modificarpasiente(req, res) {}
-metodos.update = function (datosMedico, deTalMedico, callback) {
+metodos.update = function (datospasiente, deTalpasiente, callback) {
 
     datos = [
         datospasiente.nnssBIGNT,
@@ -84,13 +84,13 @@ metodos.update = function (datosMedico, deTalMedico, callback) {
             if (rows.affectedRows == 0) {
                 callback(undefined, {
                     message:
-                        `no se enocntro un pasiente con la matricula el medico ${deTalpasiente}`,
+                        `no se enocntro un pasiente con ese nombre el pasiente ${deTalpasiente}`,
                     detail: rows,
                 })
             } else {
                 callback(undefined, {
                     message:
-                        `el pasiente ${datosMedico.nombre} se actualizo correctamente`,
+                        `el pasiente ${datospasiente.nombre} se actualizo correctamente`,
                     detail: rows,
                 })
             }
@@ -113,7 +113,7 @@ metodos.crearpasiente = function (datospasiente, callback) {
     consulta =
         "INSERT INTO consulte (nnssBIGNT, nombre, apellido, nro_cama, observaciones) VALUES (?, ?, ?, ?, ?)";
 
-    pasiente.query(consulta, medico, (err, rows) => {
+    pasiente.query(consulta, pasiente, (err, rows) => {
         if (err) {
             if (err.code = "ER_DUP_ENTRY") {
                 callback({
@@ -138,8 +138,8 @@ metodos.crearpasiente = function (datospasiente, callback) {
 }
 
 // -->  app.delete("/:nnssBIGNT", eliminarpasiente);   -->   pasienteBD.metodos.deletepasiente(req.params.nnssBIGNT, (err, exito) => {}); 
-metodos.deleteMedico = function (matricula, callback) {
-    query = "delete from pasiente where matricula = ?";
+metodos.deleteMedico = function (dni, callback) {
+    query = "delete from pasiente where dni = ?";
     connection.query(query,nnssBIGNT , function (err, rows, fields) {
         if (err) {
             callback({
@@ -149,9 +149,9 @@ metodos.deleteMedico = function (matricula, callback) {
         }
 
         if (rows.affectedRows == 0) {
-            callback(undefined, "No se encontro un pasiente con la nnssBIGNT " + nnssBIGNT);
+            callback(undefined, "No se encontro un pasiente con ese dni " + dni);
         } else {
-            callback(undefined, "el pasiente " + nnssBIGNT + " fue eliminado de la Base de datos");
+            callback(undefined, "el pasiente " + dni + " fue eliminado de la Base de datos");
         }
     });
 }
