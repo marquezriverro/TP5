@@ -19,16 +19,16 @@ metodos.getAll = function (callback) {
     });
 }
 
-// --> app.get('/:fecha_ingreso', obtenerpasiente);  -->  ingresoBD.getpasingreso(fecha_ingreso ,() => {})
-metodos.getMedico = function (matricula, callback) {
-    consulta = "select * from ingreso where fecha_ingreso = ?";
+// --> app.get('/:ID_ingreso', obtenerpasiente);  -->  ingresoBD.getpasingreso(ID_ingreso ,() => {})
+metodos.getingreso = function (fecha_ingreso, callback) {
+    consulta = "select * from ingreso where ID_ingreso = ?";
 
-ingreso.query(consulta, fecha_ingreso, function (err, resultados, fields) {
+ingreso.query(consulta, ID_ingreso, function (err, resultados, fields) {
         if (err) {
             callback(err);
         } else {
             if (resultados.length == 0) {
-                callback(undefined, "no se encontro un ingreso con la fecha_ingreso:" +nnssBIGNT )
+                callback(undefined, "no se encontro un ingreso con la ID_ingreso:" fecha_ingreso )
             } else {
                 callback(undefined, {
                     messaje: "Resultados de la consulta",
@@ -40,7 +40,7 @@ ingreso.query(consulta, fecha_ingreso, function (err, resultados, fields) {
     });
 
 }
-metodos.getByfecha_ingreso = function (nnssBIGNT, callback) {
+metodos.getByfecha_ingreso = function (fecha_ingreso, callback) {
     consulta = "select * from ingreso where nombre = ?";
 
     ingreso.query(consulta,nombre , function (err, resultados, fields) {
@@ -61,18 +61,18 @@ metodos.getByfecha_ingreso = function (nnssBIGNT, callback) {
 
 }
 
-//--> app.put("/:fecha_ingreso", modificaringreso);  --> function modificaringreso(req, res) {}
+//--> app.put("/:ID_ingreso", modificaringreso);  --> function modificaringreso(req, res) {}
 metodos.update = function (datosMedico, deTalMedico, callback) {
 
     datos = [
-        datosingreso.nnssBIGNT,
+        datosingreso.fecha_ingreso,
         datosingreso.nombre,
         datosingreso.apellido,
         datosingreso.nro_cama,
         datosingreso.observaciones,
         parseInt(deTalingreso)
     ];
-    consulta = "update ingreso set fecha_ingreso = ?, nombre = ?, apellido = ?, nro_cama = ?, observaciones = ? WHERE fecha_ingreso = ?";
+    consulta = "update ingreso set ID_ingreso = ?, nombre = ?, apellido = ?, nro_cama = ?, observaciones = ? WHERE ID_ingreso = ?";
 
 
     ingreso.query(consulta, datos, (err, rows) => {
@@ -83,7 +83,7 @@ metodos.update = function (datosMedico, deTalMedico, callback) {
             if (rows.affectedRows == 0) {
                 callback(undefined, {
                     message:
-                        `no se enocntro un ingreso con la fecha_ingreso  ${deTalingreso}`,
+                        `no se enocntro un ingreso con la ID_ingreso  ${deTalingreso}`,
                     detail: rows,
                 })
             } else {
@@ -116,7 +116,7 @@ metodos.crearingreso = function (datospasiente, callback) {
         if (err) {
             if (err.code = "ER_DUP_ENTRY") {
                 callback({
-                    message: "ya existe un ingreso con ese Dni  " + datospasiente.nnssBIGNT,
+                    message: "ya existe un ingreso con ese Dni  " + datodingreso.id_ingreso,
                     detail: err.sqlMessage
                 })
             } else {
@@ -129,7 +129,7 @@ metodos.crearingreso = function (datospasiente, callback) {
 
         } else {
             callback(undefined, {
-                message: "el ingreso" + datosingreso.Dni + " " + datosingreso.fecha_ingreso + "se registro correctamente",
+                message: "el ingreso" + datosingreso.Dni + " " + datosingreso.ID_ingreso + "se registro correctamente",
                 detail: rows,
             })
         }
@@ -148,9 +148,9 @@ metodos.deleteingreso = function (fecha_ingreso, callback) {
         }
 
         if (rows.affectedRows == 0) {
-            callback(undefined, "No se encontro un pasiente con la  fecha_ingreso" + fecha_ingreso);
+            callback(undefined, "No se encontro un pasiente con la  ID_ingreso" + fecha_ingreso);
         } else {
-            callback(undefined, "el ingreso " + fecha_ingreso + " fue eliminado de la Base de datos");
+            callback(undefined, "el ingreso " + ID_ingreso + " fue eliminado de la Base de datos");
         }
     });
 }
