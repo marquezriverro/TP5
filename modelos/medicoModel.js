@@ -1,23 +1,10 @@
 //codigo encargado de gestionar los datos con la base de datos de los medicos
 require('rootpath')();
-
-const mysql = require("mysql");
-const configuracion = require("config.json");
-const { query } = require('express');
-// Agregue las credenciales para acceder a su base de datos
-const connection = mysql.createConnection(configuracion.database);
-
-connection.connect((err) => {
-    if (err) {
-        console.log(err.code);
-    } else {
-        console.log("BD conectada");
-    }
-});
+const medico = require("./BD_conect");
 
 var metodos = {}
 
-// --> app.get("/", listarTodo());  --> medicos = medicoBD.getAll((err, result) => {}
+// --> app.get("/", listarTodo());  --> medico = medicoBD.getAll((err, result) => {}
 metodos.getAll = function (callback) {
     consulta = "select * from medico";
     connection.query(consulta, function (err, resultados, fields) {
@@ -37,7 +24,7 @@ metodos.getAll = function (callback) {
 metodos.getMedico = function (matricula, callback) {
     consulta = "select * from medico where matricula = ?";
 
-    connection.query(consulta, matricula, function (err, resultados, fields) {
+    medico.query(consulta, matricula, function (err, resultados, fields) {
         if (err) {
             callback(err);
         } else {
@@ -57,7 +44,7 @@ metodos.getMedico = function (matricula, callback) {
 metodos.getByEspecialidad = function (especiliadad, callback) {
     consulta = "select * from medico where especialidad = ?";
 
-    connection.query(consulta, especiliadad, function (err, resultados, fields) {
+    medico.query(consulta, especiliadad, function (err, resultados, fields) {
         if (err) {
             callback(err);
         } else {
@@ -89,7 +76,7 @@ metodos.update = function (datosMedico, deTalMedico, callback) {
     consulta = "update medico set  matricula = ?, nombre = ?, apellido = ?, especialidad = ?, observaciones = ? WHERE matricula = ?";
 
 
-    connection.query(consulta, datos, (err, rows) => {
+    medico.query(consulta, datos, (err, rows) => {
         if (err) {
             callback(err);
         } else {
@@ -126,7 +113,7 @@ metodos.crearMedico = function (datosMedico, callback) {
     consulta =
         "INSERT INTO MEDICO (matricula, nombre, apellido, especialidad, observaciones) VALUES (?, ?, ?, ?, ?)";
 
-    connection.query(consulta, medico, (err, rows) => {
+    medico.query(consulta, medico, (err, rows) => {
         if (err) {
             if (err.code = "ER_DUP_ENTRY") {
                 callback({
