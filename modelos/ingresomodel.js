@@ -2,9 +2,9 @@ const conexion = require('./config_database');
 
 var metodos = {}
 
-// --> app.get("/", listarTodo());  --> medicos = medicos.getAll((err, result) => {}
+// --> app.get("/", listarTodo());  --> ingreso = ingreso.getAll((err, result) => {}
 metodos.getAll = function (callback) {
-    consulta = "select * from medicos";
+    consulta = "select * from ingreso";
     conexion.query(consulta, function (err, resultados, fields) {
         if (err) {
             callback(err);
@@ -18,16 +18,16 @@ metodos.getAll = function (callback) {
     });
 }
 
-// --> app.get('/:matricula', obtenerMedicos);  -->  medicos.getMedicos(matricula, () => {})
+// --> app.get('/:fecha -ingreso', obteneringreso);  -->  ingreso.getingreso(fecha -ingreso, () => {})
 metodos.getMedicos = function (matricula, callback) {
-    consulta = "select * from medicos where matricula = ?";
+    consulta = "select * from  ingresonwhere matricula = ?";
 
-    conexion.query(consulta, matricula, function (err, resultados, fields) {
+    conexion.query(consulta, fecha_ingreso,dni, function (err, resultados, fields) {
         if (err) {
             callback(err);
         } else {
             if (resultados.length == 0) {
-                callback(undefined, "no se encontro un medico con la matricula:" + matricula)
+                callback(undefined, "no se encontro un ingreso con fecha_ingreso:" + dni)
             } else {
                 callback(undefined, {
                     messaje: "Resultados de la consulta",
@@ -39,18 +39,18 @@ metodos.getMedicos = function (matricula, callback) {
     });
 
 }
-metodos.getByEspecialidad = function (especiliadad, callback) {
-    consulta = "select * from medicos where especialidad = ?";
+metodos.getByfecha_ingreso = function (fecha_ingreso, callback) {
+    consulta = "select * from ingreso where fecha_ingreso = ?";
 
-    conexion.query(consulta, especiliadad, function (err, resultados, fields) {
+    conexion.query(consulta, fecha_ingreso, function (err, resultados, fields) {
         if (err) {
             callback(err);
         } else {
             if (resultados.length == 0) {
-                callback(undefined, "no se encontro un medico con la especialidad:" + especiliadad)
+                callback(undefined, "no se encontro un ingreso con la fecha_ingreso:" + fecha_ingreso)
             } else {
                 callback(undefined, {
-                    messaje: "Resultados de la consulta con la especialidad" + especiliadad,
+                    messaje: "Resultados de la consulta con la fecha_ingreso" + fecha_ingreso,
                     detail: resultados,
                 });
             }
@@ -60,62 +60,24 @@ metodos.getByEspecialidad = function (especiliadad, callback) {
 
 }
 
-//--> app.put("/:matricula", modificarMedicos);  --> function modificarMedicos(req, res) {}
+//--> app.put("/:dni", modificaringreso);  --> function modificaringreso(req, res) {}
 metodos.update = function (datosMedicos, deTalMedicos, callback) {
 
     datos = [
-        datosMedicos.matricula,
-        datosMedicos.nombre,
-        datosMedicos.apellido,
-        datosMedicos.especialidad,
-        datosMedicos.observaciones,
-        parseInt(deTalMedico)
-    ];
-    consulta = "update medicos set  matricula = ?, nombre = ?, apellido = ?, especialidad = ?, observaciones = ? WHERE matricula = ?";
-
-
-    conexion.query(consulta, datos, (err, rows) => {
-        if (err) {
-            callback(err);
-        } else {
-
-            if (rows.affectedRows == 0) {
-                callback(undefined, {
-                    message:
-                        `no se enocntro un medico con la matricula el medico ${deTalMedico}`,
-                    detail: rows,
-                })
-            } else {
-                callback(undefined, {
-                    message:
-                        `el medicos ${datosMedico.nombre} se actualizo correctamente`,
-                    detail: rows,
-                })
-            }
-
-        }
-    });
-
-
-}
-
-//--> medicos.metodos.crearMedico(req.body, (err, exito) => {});
-metodos.crearMedicos = function (datosMedicos, callback) {
-    medicos = [
-        datosMedicos.matricula,
-        datosMedicos.nombre,
-        datosMedicos.apellido,
-        datosMedicos.especialidad,
-        datosMedicos.observaciones,
+        datosingreso.,
+       datosingreso.nombre,
+        datosingreso.apellido,
+        datosingreso.nro_cama,
+        datosingreso.historial_pasiente,
     ];
     consulta =
-        "INSERT INTO MEDICO (matricula, nombre, apellido, especialidad, observaciones) VALUES (?, ?, ?, ?, ?)";
+        "INSERT INTO consulte (Dni, nombre, apellido, nro_cama, historial_pasiente) VALUES (?, ?, ?, ?, ?)";
 
-    conexion.query(consulta, medicos, (err, rows) => {
+    ingreso.query(consulta, ingreso, (err, rows) => {
         if (err) {
             if (err.code = "ER_DUP_ENTRY") {
                 callback({
-                    message: "ya existe un medico con la matricula " + datosMedico.matricula,
+                    message: "ya existe un ingreso con ese Dni  " + datospasiente.nnssBIGNT,
                     detail: err.sqlMessage
                 })
             } else {
@@ -128,17 +90,17 @@ metodos.crearMedicos = function (datosMedicos, callback) {
 
         } else {
             callback(undefined, {
-                message: "el medicos " + datosMedicos.nombre + " " + datosMedicos.apellido + "se registro correctamente",
+                message: "el ingreso" + datosingreso.Dni + " " + datosingreso.fecha_ingreso + "se registro correctamente",
                 detail: rows,
             })
         }
     });
 }
 
-// -->  app.delete("/:matricula", eliminarMedico);   -->   medicoBD.metodos.deleteMedico(req.params.matricula, (err, exito) => {}); 
-metodos.deleteMedicos = function (matricula, callback) {
-    query = "delete from medicos where matricula = ?";
-    conexion.query(query, matricula, function (err, rows, fields) {
+// -->  app.delete("/:fecha_ingreso", eliminaringreso);   -->   ingresoBD.metodos.deleteingreso(req.params.nnssBIGNT, (err, exito) => {}); 
+metodos.deleteingreso = function (fecha_ingreso, callback) {
+    query = "delete from ingreso where fecha_ingreso = ?";
+    connection.query(query,fecha_ingreso , function (err, rows, fields) {
         if (err) {
             callback({
                 message: "ha ocurrido un error",
@@ -147,9 +109,9 @@ metodos.deleteMedicos = function (matricula, callback) {
         }
 
         if (rows.affectedRows == 0) {
-            callback(undefined, "No se encontro un medico con la matricula " + matricula);
+            callback(undefined, "No se encontro un pasiente con la  fecha_ingreso" + fecha_ingreso);
         } else {
-            callback(undefined, "el medico " + matricula + " fue eliminado de la Base de datos");
+            callback(undefined, "el ingreso " + fecha_ingreso + " fue eliminado de la Base de datos");
         }
     });
 }
