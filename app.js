@@ -6,9 +6,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const medicosController = require('./src/controller/medicos');
-const ingresoController = require('./src/controller/ingreso');
-const pasienteController = require('./src/controller/pasiente');
+const medicosController = require('./TP5/controller/medicos');
+const ingresoController = require('./TP5/controller/ingreso');
+const pasienteController = require('./TP5/controller/pasiente');
 
 app.use("/medicos", medicosController); //ejemplo de peticion --> https://localhost:8080/medicos/listar
  app.use('/ingreso', ingresoController);
