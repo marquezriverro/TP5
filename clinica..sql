@@ -1,6 +1,6 @@
-SELECT * FROM clinica.medico;
+SELECT * FROM clinica.medicos;
 
-CREATE TABLE  MEDICO (
+CREATE TABLE  MEDICOS (
   matricula INT ,
   nombre NCHAR(30) ,
   apellido VARCHAR(30) ,
@@ -41,17 +41,17 @@ CREATE TABLE  ingreso (
   
   SELECT * FROM clinica.medico;
 
-insert into medico values(122, "lucia","faseco","cardiologia",null);
-insert into medico values(155, "alfedo","gutierres","medico familiar","no atiende pami",true);
-insert into medico values(226, "frodo","bolson","pediatra","solamente turno tarde",true);
-insert into medico values(332, "jesus maria","prates","medico familiar","sirujia",null);
-insert into medico values(334, "gandalf","meridoc","infectologia",null);
-insert into medico values(449, "ricardo","puchini","medico familiar","medico clinico general",true);
-insert into medico values(645, "cacho","villa","oftalmologo",null);
-insert into medico values(733, "tatiana","brandigamo","pediatra",null);
-insert into medico values(774, "alfonso ","chamorro","cardiologia",null);
-insert into medico values(888, "pedro pablo","sichanowqui","urologia","lisencia por covid19",true);
-insert into medico values(155, "alfedo","gutierres","medico familiar","no atiende pami",true)
+insert into medicos values(122, "lucia","faseco","cardiologia",null);
+insert into medicos values(155, "alfedo","gutierres","medico familiar","no atiende pami",true);
+insert into medicos values(226, "frodo","bolson","pediatra","solamente turno tarde",true);
+insert into medicos values(332, "jesus maria","prates","medico familiar","sirujia",null);
+insert into medicos values(334, "gandalf","meridoc","infectologia",null);
+insert into medicos values(449, "ricardo","puchini","medico familiar","medico clinico general",true);
+insert into medicos values(645, "cacho","villa","oftalmologo",null);
+insert into medicos values(733, "tatiana","brandigamo","pediatra",null);
+insert into medicos values(774, "alfonso ","chamorro","cardiologia",null);
+insert into medicos values(888, "pedro pablo","sichanowqui","urologia","lisencia por covid19",true);
+insert into medicos values(155, "alfedo","gutierres","medico familiar","no atiende pami",true)
 
 SELECT * FROM clinica.pasiente;
 insert into PASIENTE 
