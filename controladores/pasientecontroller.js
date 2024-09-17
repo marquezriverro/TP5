@@ -53,7 +53,7 @@ function buscarPorID(req, res) {
 
 
 function actualizar_pasiente(req, res) {
-    let pasiente_id = req.params.vehiculo_id;
+    let pasiente_id = req.params.pasiente_id;
     model.actualizar_pasiente(req.body, pasiente_id, (err, resultado) => {
         if (err) {
             res.status(500).send(err);
@@ -81,4 +81,4 @@ function eliminar_pasiente(req, res) {
 
 
 //exportamos app que es nuestro servidor express a la cual se le agregaron endpoinds de escucha
-module.exports = app;
+module.exports = router;
