@@ -1,11 +1,10 @@
 const mysql = require("mysql");
 const misconfiguraciones = require("config.json");
 
-const unanuevaconnection = mysql.createConnection(misconfiguraciones.database);
+const db = mysql.createConnection(misConfiguraciones.database);
 
 
-
-unanuevaconnection.connect((err) => {
+db.connect((err) => {
     if (err) {
         console.log(err.code);
    const connection = mysql.createConnection(configuracion.database);
@@ -14,4 +13,4 @@ unanuevaconnection.connect((err) => {
     }
 });
 
-module.exports = unanuevaconnection
+module.exports = db
