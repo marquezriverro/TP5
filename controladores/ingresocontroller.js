@@ -13,33 +13,11 @@ router.post('/create', crear);
 router.get('/:FECHA_INGRESO', obteneringreso);
 router.delete("/:FECHA_INGRESO", eliminaringreso);
 router.put("/:FECHA_INGRESO", modificaringreso);
-
-
-
-
-
-
-
-
-
 // --------------------------------------------------------
 // ---------FUNCIONES UTILIZADAS EN ENDPOINTS -------------
 // --------------------------------------------------------
-
-function getByFECHA_INGRESO(req, res) {
-    especialidad = req.params.FECHA_INGRESO
-    ingresomodel = ingresoBD.metodos.getByFECHA_INGRESO(FECHA_INGRESO, (err, result) => {
-        if (err) {
-            res.send(err);
-        } else {
-            res.json(result);
-        }
-    }
-    );
-}
-
 function listarTodo(req, res) {
-    ingreso = ingresomodel.metodos.getAll((err, result) => {
+    model.listar_todo = ((err, result) => {
         if (err) {
             res.send(err);
         } else {
@@ -50,55 +28,55 @@ function listarTodo(req, res) {
 }
 
 function crear(req, res) {
-    ingresomodel.metodos.crearingreso(req.body, (err, exito) => {
+    model.crear_ingreso(req.body, (err, resultado) => {
         if (err) {
-            res.send(err);
+            res.status(500).send(err);
         } else {
-            res.json(exito);
+            res.send(resultado);
         }
     });
 }
 
 
-function obteneringreso(req, res) {
-    let FECHA_INGRESO = req.params.FECHA_INGRESO;
-    ingresomodel.metodos.getingreso(FECHA_INGRESO, () => {
-        (err, exito) => {
-            if (err) {
-                res.status(500).send(err)
+function buscarPorID(req, res) {
+    model.buscarPorID(req.params.ingreso_id, (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send(result);
+        }
+    });
+}
+
+
+
+function actualizar_ingreso(req, res) {
+    let ingreso_id = req.params.ingreso_id;
+    model.actualizar_ingreso(req.body, ingreso_id, (err, resultado) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send(resultado);
+        }
+    });
+}
+
+
+function eliminar_ingreso(req, res) {
+    let pasiente_id = req.params.ingreso_id;
+    model.eliminar_ingreso(ingreso_id, (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            if (result.detail.affectedRows == 0) {
+                res.status(404).send(result.message);
             } else {
-                res.status(200).send(exito)
+                res.send(result);
             }
         }
     });
 }
 
-//router.put("/:FECHA_INGRESO", modificaringreso);
-
-
-
-function modificaringreso(req, res) {
-    datosingreso = req.body;
-    deEsteingreso = req.params.FECHA_INGRESO;
-    ingresomodel.metodos.update(datosingreso, deEsteingreso, (err, exito) => {
-        if (err) {
-            res.status(500).send(err)
-        } else {
-            res.status(200).send(exito) //ingreso modificado
-        }
-    });
-}
-
-
-function eliminaringreso(req, res) {
-    ingresomodel.metodos.deleteMedico(req.params.matricula, (err, exito) => {
-        if (err) {
-            res.status(500).json(err);
-        } else {
-            res.send(exito)
-        }
-    })
-}
 
 //exportamos app que es nuestro servidor express a la cual se le agregaron endpoinds de escucha
 module.exports = router;
