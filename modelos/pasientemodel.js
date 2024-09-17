@@ -1,13 +1,11 @@
-require('rootpath')();
 
-const pasiente = require("./BD_conect");
-
+const db = require('./config_database');
 var metodos = {}
 
 // --> app.get("/", listarTodo());  --> pasientes = pasientesBD.getAll((err, result) => {}
 metodos.getAll = function (callback) {
     consulta = "select * from pasiente";
-    pasiente.query(consulta, function (err, resultados, fields) {
+    db.query(consulta, function (err, resultados, fields) {
         if (err) {
             callback(err);
             return;
@@ -24,7 +22,7 @@ metodos.getAll = function (callback) {
 metodos.getpasiente = function (matricula, callback) {
     consulta = "select * from pasiente where nnssBIGNT = ?";
 
-    pasiente.query(consulta, nnssBIGNT, function (err, resultados, fields) {
+    db.query(consulta, nnssBIGNT, function (err, resultados, fields) {
         if (err) {
             callback(err);
         } else {
@@ -44,7 +42,7 @@ metodos.getpasiente = function (matricula, callback) {
 metodos.getBynnssBIGNT = function (nnssBIGNT, callback) {
     consulta = "select * from pasiente where nombre = ?";
 
-    pasiente.query(consulta,nombre , function (err, resultados, fields) {
+    db.query(consulta,nombre , function (err, resultados, fields) {
         if (err) {
             callback(err);
         } else {
@@ -76,7 +74,7 @@ metodos.update = function (datospasiente, deTalpasiente, callback) {
     consulta = "update pasiente set nnssBIGNT  = ?, nombre = ?, apellido = ?, nro_cama = ?, observaciones = ? WHERE nnssBIGNT = ?";
 
 
-    pasiente.query(consulta, datos, (err, rows) => {
+    db.query(consulta, datos, (err, rows) => {
         if (err) {
             callback(err);
         } else {
@@ -113,7 +111,7 @@ metodos.crearpasiente = function (datospasiente, callback) {
     consulta =
         "INSERT INTO consulte (nnssBIGNT, nombre, apellido, nro_cama, observaciones) VALUES (?, ?, ?, ?, ?)";
 
-    pasiente.query(consulta, pasiente, (err, rows) => {
+    db.query(consulta, pasiente, (err, rows) => {
         if (err) {
             if (err.code = "ER_DUP_ENTRY") {
                 callback({
