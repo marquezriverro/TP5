@@ -1,49 +1,25 @@
 const express = require('express');
-
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-
-const pasienteBD= require("./../modelos/pasienteModel.js");
+const router = express.Router();
+const model = require('./../model/pasiente.js');
 
 // -------------------------------------------------------- 
 // --rutas de escucha (endpoint) dispoibles para pasiente--- 
 // --------------------------------------------------------
 
-app.get("/", listarTodo);
-app.get("/:nnssBIGNT", getBynnssBIGNT);
-app.post('/create', crear);
-app.get('/:nombre', obtenerpasiente);
-app.delete("/:nombre", eliminarpasiente);
-app.put("/:nombre", modificarpasiente);
-
-
-
-
-
-
-
-
+router.get("/", listarTodo);
+router.get("/:nnssBIGNT", getBynnssBIGNT);
+router.post('/create', crear);
+router.get('/:nombre', obtenerpasiente);
+router.delete("/:nombre", eliminarpasiente);
+router.put("/:nombre", modificarpasiente);
 
 // --------------------------------------------------------
 // ---------FUNCIONES UTILIZADAS EN ENDPOINTS -------------
 // --------------------------------------------------------
 
-function getBynnssBIGNT(req, res) {
-    nnssBIGNT= req.params.nnssBIGNT
-    pasiente = pasienteBD.metodos.getBynnssBIGNT(nnssBIGNT, (err, result) => {
-        if (err) {
-            res.send(err);
-        } else {
-            res.json(result);
-        }
-    }
-    );
-}
 
 function listarTodo(req, res) {
-    pasiente = pasienteBD.metodos.getAll((err, result) => {
+    model.listar_todo = ((err, result) => {
         if (err) {
             res.send(err);
         } else {
@@ -54,55 +30,55 @@ function listarTodo(req, res) {
 }
 
 function crear(req, res) {
-    pasienteBD.metodos.crearpasiente(req.body, (err, exito) => {
+    model.crear_pasiente(req.body, (err, resultado) => {
         if (err) {
-            res.send(err);
+            res.status(500).send(err);
         } else {
-            res.json(exito);
+            res.send(resultado);
         }
     });
 }
 
 
-function obtenerpasiente(req, res) {
-    let nnssBIGNT = req.params.nnssBIGNT;
-    pasienteBD.metodos.getpasiente(nnssBIGNT, () => {
-        (err, exito) => {
-            if (err) {
-                res.status(500).send(err)
+function buscarPorID(req, res) {
+    model.buscarPorID(req.params.pasiente_id, (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send(result);
+        }
+    });
+}
+
+
+
+function actualizar_pasiente(req, res) {
+    let pasiente_id = req.params.vehiculo_id;
+    model.actualizar_pasiente(req.body, pasiente_id, (err, resultado) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.send(resultado);
+        }
+    });
+}
+
+
+function eliminar_pasiente(req, res) {
+    let pasiente_id = req.params.vehiculo_id;
+    model.eliminar_pasiente(pasiente_id, (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            if (result.detail.affectedRows == 0) {
+                res.status(404).send(result.message);
             } else {
-                res.status(200).send(exito)
+                res.send(result);
             }
         }
     });
 }
 
-//app.put("/:matricula", modificarpasiente);
-
-
-
-function modificarpasiente(req, res) {
-    datospasiente = req.body;
-    deEstepasiente = req.params.nnssBIGNT;
-    pasienteBD.metodos.update(datospasiente, deEstepasiente, (err, exito) => {
-        if (err) {
-            res.status(500).send(err)
-        } else {
-            res.status(200).send(exito) //pasiente modificado
-        }
-    });
-}
-
-
-function eliminarpasiente(req, res) {
-    medicoBD.metodos.deletepasiente(req.params.matricula, (err, exito) => {
-        if (err) {
-            res.status(500).json(err);
-        } else {
-            res.send(exito)
-        }
-    })
-}
 
 //exportamos app que es nuestro servidor express a la cual se le agregaron endpoinds de escucha
 module.exports = app;
