@@ -1,12 +1,11 @@
 //--- requires ------------------------------------------
+
 const express = require('express');
-
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 
-
-const medicoBD = require("./../modelos/medicosModel.js");
+var model = require('./../model/medicos');
 
 // -------------------------------------------------------- 
 // --rutas de escucha (endpoint) dispoibles para MEDICO --- 
