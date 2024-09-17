@@ -1,72 +1,157 @@
+const conexion = require('./config_database');
 
-const express = require('express');
-const router = express.Router();
-const model = require('./../modelos/pasiente.js');
+var metodos = {}
 
-
-router.get('/', listar_pasiente);
-router.get('/:pasiente_id', buscarPorID);
-router.post('/', crear_pasiente);
-router.put('/:pasiente_id', actualizar_pasiente);
-router.delete('/:pasiente_id', eliminar_pasiente);
-
-
-function listar_pasiente(req, res) {
-    model.listar_pasiente((err, resultado) => {
+// --> app.get("/", listarTodo());  --> pasientes = pasientesBD.getAll((err, result) => {}
+metodos.getAll = function (callback) {
+    consulta = "select * from pasiente";
+    connection.query(consulta, function (err, resultados, fields) {
         if (err) {
-            res.status(500).send(err);
+            callback(err);
+            return;
         } else {
-            res.json(resultado);
+            callback(undefined, {
+                messaje: "Resultados de la consulta",
+                detail: resultados,
+            });
         }
     });
 }
 
-function buscarPorID(req, res) {
-    model.buscarPorID(req.params.vehiculo_id, (err, result) => {
-        if (err) {
-            res.status(500).send(err);
-        } else {
-            res.send(result);
-        }
-    });
-}
+// --> app.get('/:nnssBIGNT', obtenerpasiente);  -->  pasienteBD.getpasiente(nnssBIGNT, () => {})
+metodos.getMedico = function (matricula, callback) {
+    consulta = "select * from pasiente where nnssBIGNT = ?";
 
-
-function crear_pasiente(req, res) {
-    model.crear_pasiente(req.body, (err, resultado) => {
+    conexion.query(consulta, nnssBIGNT, function (err, resultados, fields) {
         if (err) {
-            res.status(500).send(err);
+            callback(err);
         } else {
-            res.send(resultado);
-        }
-    });
-}
-
-function actualizar_pasiente(req, res) {
-    let vehiculo_id = req.params.vehiculo_id;
-    model.actualizar_pasiente(req.body, pasiente_id, (err, resultado) => {
-        if (err) {
-            res.status(500).send(err);
-        } else {
-            res.send(resultado);
-        }
-    });
-}
-
-function eliminar_pasiente(req, res) {
-    let pasiente_id = req.params.pasiente_id;
-    model.eliminar_pasiente(pasiente_id, (err, result) => {
-        if (err) {
-            res.status(500).send(err);
-        } else {
-            if (result.detail.affectedRows == 0) {
-                res.status(404).send(result.message);
+            if (resultados.length == 0) {
+                callback(undefined, "no se encontro un pasiente con la nnssBIGNT:" +nnssBIGNT )
             } else {
-                res.send(result);
+                callback(undefined, {
+                    messaje: "Resultados de la consulta",
+                    detail: resultados,
+                });
             }
         }
+
+    });
+
+}
+metodos.getBynnssBIGNT = function (nnssBIGNT, callback) {
+    consulta = "select * from pasiente where nombre = ?";
+
+    conexion.query(consulta,nombre , function (err, resultados, fields) {
+        if (err) {
+            callback(err);
+        } else {
+            if (resultados.length == 0) {
+                callback(undefined, "no se encontro un pasiente con nombre :" + nombre)
+            } else {
+                callback(undefined, {
+                    messaje: "Resultados de la consulta con nombre" + nombre,
+                    detail: resultados,
+                });
+            }
+        }
+
+    });
+
+}
+
+//--> app.put("/:nnssBIGNT", modificarpasiente);  --> function modificarpasiente(req, res) {}
+metodos.update = function (datosMedico, deTalMedico, callback) {
+
+    datos = [
+        datospasiente.nnssBIGNT,
+        datospasiente.nombre,
+        datospasiente.apellido,
+        datospasiente.nro_cama,
+        datospasiente.observaciones,
+        parseInt(deTalpasiente)
+    ];
+    consulta = "update pasiente set nnssBIGNT  = ?, nombre = ?, apellido = ?, nro_cama = ?, observaciones = ? WHERE nnssBIGNT = ?";
+
+
+    conexion.query(consulta, datos, (err, rows) => {
+        if (err) {
+            callback(err);
+        } else {
+
+            if (rows.affectedRows == 0) {
+                callback(undefined, {
+                    message:
+                        `no se enocntro un pasiente con la nombre  ${deTalpasiente}`,
+                    detail: rows,
+                })
+            } else {
+                callback(undefined, {
+                    message:
+                        `el pasiente ${datospasiente.nombre} se actualizo correctamente`,
+                    detail: rows,
+                })
+            }
+
+        }
+    });
+
+
+}
+
+//--> pasienteBD.metodos.crearpasiente(req.body, (err, exito) => {});
+metodos.crearpasiente = function (datospasiente, callback) {
+    pasiente = [
+        datospasiente.nnssBIGNT,
+        datospasiente.nombre,
+        datospasiente.apellido,
+        datospasiente.nro_cama,
+        datospasiente.observaciones,
+    ];
+    consulta =
+        "INSERT INTO consulte (nnssBIGNT, nombre, apellido, nro_cama, observaciones) VALUES (?, ?, ?, ?, ?)";
+
+    conexion.query(consulta, medico, (err, rows) => {
+        if (err) {
+            if (err.code = "ER_DUP_ENTRY") {
+                callback({
+                    message: "ya existe un pasiente con ese nnssBIGNT " + datospasiente.nnssBIGNT,
+                    detail: err.sqlMessage
+                })
+            } else {
+                callback({
+                    message: "otro error que no conocemos",
+                    detail: err.sqlMessage
+                })
+            }
+
+
+        } else {
+            callback(undefined, {
+                message: "el pasiente " + datospasiente.nombre + " " + datospasiente.apellido + "se registro correctamente",
+                detail: rows,
+            })
+        }
     });
 }
 
+// -->  app.delete("/:nnssBIGNT", eliminarpasiente);   -->   pasienteBD.metodos.deletepasiente(req.params.nnssBIGNT, (err, exito) => {}); 
+metodos.deletepasiente = function (matricula, callback) {
+    query = "delete from pasiente where nombre = ?";
+    conexion.query(query,nnssBIGNT , function (err, rows, fields) {
+        if (err) {
+            callback({
+                message: "ha ocurrido un error",
+                detail: err,
+            });
+        }
 
-module.exports = router;
+        if (rows.affectedRows == 0) {
+            callback(undefined, "No se encontro un pasiente con la nnssBIGNT " + nnssBIGNT);
+        } else {
+            callback(undefined, "el pasiente " + nnssBIGNT + " fue eliminado de la Base de datos");
+        }
+    });
+}
+
+module.exports = { metodos }
