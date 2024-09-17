@@ -4,10 +4,10 @@ const conexion = require('./config_database');
 
 var metodos = {}
 
-// --> app.get("/", listarTodo());  --> medico = medicoBD.getAll((err, result) => {}
+// --> app.get("/", listarTodo());  --> medicos = medicos.getAll((err, result) => {}
 metodos.getAll = function (callback) {
-    consulta = "select * from medico";
-    connection.query(consulta, function (err, resultados, fields) {
+    consulta = "select * from medicos";
+    conexion.query(consulta, function (err, resultados, fields) {
         if (err) {
             callback(err);
             return;
@@ -20,9 +20,9 @@ metodos.getAll = function (callback) {
     });
 }
 
-// --> app.get('/:matricula', obtenerMedico);  -->  medicoBD.getMedico(matricula, () => {})
-metodos.getMedico = function (matricula, callback) {
-    consulta = "select * from medico where matricula = ?";
+// --> app.get('/:matricula', obtenerMedicos);  -->  medicos.getMedicos(matricula, () => {})
+metodos.getMedicos = function (matricula, callback) {
+    consulta = "select * from medicos where matricula = ?";
 
     conexion.query(consulta, matricula, function (err, resultados, fields) {
         if (err) {
@@ -42,7 +42,7 @@ metodos.getMedico = function (matricula, callback) {
 
 }
 metodos.getByEspecialidad = function (especiliadad, callback) {
-    consulta = "select * from medico where especialidad = ?";
+    consulta = "select * from medicos where especialidad = ?";
 
     conexion.query(consulta, especiliadad, function (err, resultados, fields) {
         if (err) {
@@ -62,18 +62,18 @@ metodos.getByEspecialidad = function (especiliadad, callback) {
 
 }
 
-//--> app.put("/:matricula", modificarMedico);  --> function modificarMedico(req, res) {}
-metodos.update = function (datosMedico, deTalMedico, callback) {
+//--> app.put("/:matricula", modificarMedicos);  --> function modificarMedicos(req, res) {}
+metodos.update = function (datosMedicos, deTalMedicos, callback) {
 
     datos = [
-        datosMedico.matricula,
-        datosMedico.nombre,
-        datosMedico.apellido,
-        datosMedico.especialidad,
-        datosMedico.observaciones,
+        datosMedicos.matricula,
+        datosMedicos.nombre,
+        datosMedicos.apellido,
+        datosMedicos.especialidad,
+        datosMedicos.observaciones,
         parseInt(deTalMedico)
     ];
-    consulta = "update medico set  matricula = ?, nombre = ?, apellido = ?, especialidad = ?, observaciones = ? WHERE matricula = ?";
+    consulta = "update medicos set  matricula = ?, nombre = ?, apellido = ?, especialidad = ?, observaciones = ? WHERE matricula = ?";
 
 
     conexion.query(consulta, datos, (err, rows) => {
@@ -90,7 +90,7 @@ metodos.update = function (datosMedico, deTalMedico, callback) {
             } else {
                 callback(undefined, {
                     message:
-                        `el medico ${datosMedico.nombre} se actualizo correctamente`,
+                        `el medicos ${datosMedico.nombre} se actualizo correctamente`,
                     detail: rows,
                 })
             }
@@ -101,19 +101,19 @@ metodos.update = function (datosMedico, deTalMedico, callback) {
 
 }
 
-//--> medicoBD.metodos.crearMedico(req.body, (err, exito) => {});
-metodos.crearMedico = function (datosMedico, callback) {
-    medico = [
-        datosMedico.matricula,
-        datosMedico.nombre,
-        datosMedico.apellido,
-        datosMedico.especialidad,
-        datosMedico.observaciones,
+//--> medicos.metodos.crearMedico(req.body, (err, exito) => {});
+metodos.crearMedicos = function (datosMedicos, callback) {
+    medicos = [
+        datosMedicos.matricula,
+        datosMedicos.nombre,
+        datosMedicos.apellido,
+        datosMedicos.especialidad,
+        datosMedicos.observaciones,
     ];
     consulta =
         "INSERT INTO MEDICO (matricula, nombre, apellido, especialidad, observaciones) VALUES (?, ?, ?, ?, ?)";
 
-    conexion.query(consulta, medico, (err, rows) => {
+    conexion.query(consulta, medicos, (err, rows) => {
         if (err) {
             if (err.code = "ER_DUP_ENTRY") {
                 callback({
@@ -130,7 +130,7 @@ metodos.crearMedico = function (datosMedico, callback) {
 
         } else {
             callback(undefined, {
-                message: "el medico " + datosMedico.nombre + " " + datosMedico.apellido + "se registro correctamente",
+                message: "el medicos " + datosMedicos.nombre + " " + datosMedicos.apellido + "se registro correctamente",
                 detail: rows,
             })
         }
@@ -138,9 +138,9 @@ metodos.crearMedico = function (datosMedico, callback) {
 }
 
 // -->  app.delete("/:matricula", eliminarMedico);   -->   medicoBD.metodos.deleteMedico(req.params.matricula, (err, exito) => {}); 
-metodos.deleteMedico = function (matricula, callback) {
-    query = "delete from medico where matricula = ?";
-    connection.query(query, matricula, function (err, rows, fields) {
+metodos.deleteMedicos = function (matricula, callback) {
+    query = "delete from medicos where matricula = ?";
+    conexion.query(query, matricula, function (err, rows, fields) {
         if (err) {
             callback({
                 message: "ha ocurrido un error",
