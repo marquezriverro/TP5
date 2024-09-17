@@ -1,6 +1,5 @@
-require('rootpath')();
-const ingreso = require("./BD_conect");
 
+const conexion = require('./config_database');
 var metodos = {}
 
 // --> app.get("/", listarTodo());  --> ingreso = ingresosBD.getAll((err, result) => {}
@@ -23,7 +22,7 @@ metodos.getAll = function (callback) {
 metodos.getingreso = function (fecha_ingreso, callback) {
     consulta = "select * from ingreso where ID_ingreso = ?";
 
-ingreso.query(consulta, ID_ingreso, function (err, resultados, fields) {
+contexion.query(consulta, ID_ingreso, function (err, resultados, fields) {
         if (err) {
             callback(err);
         } else {
@@ -43,7 +42,7 @@ ingreso.query(consulta, ID_ingreso, function (err, resultados, fields) {
 metodos.getByfecha_ingreso = function (fecha_ingreso, callback) {
     consulta = "select * from ingreso where nombre = ?";
 
-    ingreso.query(consulta,nombre , function (err, resultados, fields) {
+    conexion.query(consulta,nombre , function (err, resultados, fields) {
         if (err) {
             callback(err);
         } else {
@@ -75,7 +74,7 @@ metodos.update = function (datosMedico, deTalMedico, callback) {
     consulta = "update ingreso set ID_ingreso = ?, nombre = ?, apellido = ?, nro_cama = ?, observaciones = ? WHERE ID_ingreso = ?";
 
 
-    ingreso.query(consulta, datos, (err, rows) => {
+    conexion.query(consulta, datos, (err, rows) => {
         if (err) {
             callback(err);
         } else {
@@ -112,7 +111,7 @@ metodos.crearingreso = function (datospasiente, callback) {
     consulta =
         "INSERT INTO consulte (Dni, nombre, apellido, nro_cama, historial_pasiente) VALUES (?, ?, ?, ?, ?)";
 
-    ingreso.query(consulta, ingreso, (err, rows) => {
+    conecxionon.query(consulta, ingreso, (err, rows) => {
         if (err) {
             if (err.code = "ER_DUP_ENTRY") {
                 callback({
