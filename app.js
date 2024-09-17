@@ -1,34 +1,36 @@
 
 const express = require('express');
+const config = require('./src/config/config.json');
 const app = express();
-const morgan = require("morgan");
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan("tiny"));
-morgan(":method :url :status :res[content-length] - :response-time ms");
 
-const configuracion = require("./config.json");
+const medicosController = require('./src/controller/medicos');
+const ingresoController = require('./src/controller/ingreso');
+const pasienteController = require('./src/controller/pasiente');
 
-//cuando llega una peticion desde el cliente, debo redireccionar el pedido a su correspondiente controlador
-//en la URL tengo la informacion hacia donde enviar
+app.use("/medicos", medicosController); //ejemplo de peticion --> https://localhost:8080/medicos/listar
+ app.use('/ingreso', ingresoController);
+ app.use('/reserva', reservaController);
 
+function startServer(puerto) {
+    const server = app.listen(puerto, () => {
+        console.log(`Servidor escuchando en: http://localhost:${puerto}`);
+    });
 
-app.use("/api/medico", require("./controladores/medicoController.js"));
-app.use("/api/pasiente, require("./controladores/pacienteController.js"));
-  app.use("/api/ingreso, reqire("./controladores/ingresoController.js));
-  
+    server.on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+            console.log(`Puerto ${puerto} en uso, intentando con el puerto ${puerto + 1}...`);
+            puerto++;
+            startServer(puerto); // Intenta con el siguiente puerto
+        } else {
+            console.error("Error al iniciar el servidor:", err);
+        }
+    });
+}
 
+// invocamos la funcion que intenta iniciar el servidor en el puerto que le pasemos
+startServer(config.server.port);
 
-//const pacienteController = require("./controladores/pacienteController.js");
-//app.use("/api/paciente", pacienteController);
-
-
-app.listen(configuracion.server.port, (err) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log("Sevidor encendido y escuchando en el puerto " + configuracion.server.port);
-  }
-});
+module.exports = app;
