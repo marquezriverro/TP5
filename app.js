@@ -12,7 +12,7 @@ const pasienteController = require('./src/controller/pasiente');
 
 app.use("/medicos", medicosController); //ejemplo de peticion --> https://localhost:8080/medicos/listar
  app.use('/ingreso', ingresoController);
- app.use('/reserva', reservaController);
+ app.use('/reserva', pasienteController);
 
 function startServer(puerto) {
     const server = app.listen(puerto, () => {
