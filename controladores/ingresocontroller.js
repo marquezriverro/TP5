@@ -1,23 +1,18 @@
 //--- requires ------------------------------------------
 const express = require('express');
-
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-
-const ingresoBD = require("./../modelos/ingresomodel.js");
+const router = express();
+const ingresomodel = require("./../modelos/ingresomodel.js");
 
 // -------------------------------------------------------- 
 // --rutas de escucha (endpoint) dispoibles para ingreso --- 
 // --------------------------------------------------------
 
-app.get("/", listarTodo);
-app.get("/:FECHA_INGRESO", getByfecha_ingreso);
-app.post('/create', crear);
-app.get('/:FECHA_INGRESO', obteneringreso);
-app.delete("/:FECHA_INGRESO", eliminaringreso);
-app.put("/:FECHA_INGRESO", modificaringreso);
+router.get("/", listarTodo);
+router.get("/:FECHA_INGRESO", getByfecha_ingreso);
+router.post('/create', crear);
+router.get('/:FECHA_INGRESO', obteneringreso);
+router.delete("/:FECHA_INGRESO", eliminaringreso);
+router.put("/:FECHA_INGRESO", modificaringreso);
 
 
 
@@ -33,7 +28,7 @@ app.put("/:FECHA_INGRESO", modificaringreso);
 
 function getByFECHA_INGRESO(req, res) {
     especialidad = req.params.FECHA_INGRESO
-    ingresoBD = ingresoBD.metodos.getByFECHA_INGRESO(FECHA_INGRESO, (err, result) => {
+    ingresomodel = ingresoBD.metodos.getByFECHA_INGRESO(FECHA_INGRESO, (err, result) => {
         if (err) {
             res.send(err);
         } else {
@@ -44,7 +39,7 @@ function getByFECHA_INGRESO(req, res) {
 }
 
 function listarTodo(req, res) {
-    ingreso = ingresoBD.metodos.getAll((err, result) => {
+    ingreso = ingresomodel.metodos.getAll((err, result) => {
         if (err) {
             res.send(err);
         } else {
@@ -55,7 +50,7 @@ function listarTodo(req, res) {
 }
 
 function crear(req, res) {
-    ingresoBD.metodos.crearingreso(req.body, (err, exito) => {
+    ingresomodel.metodos.crearingreso(req.body, (err, exito) => {
         if (err) {
             res.send(err);
         } else {
@@ -67,7 +62,7 @@ function crear(req, res) {
 
 function obteneringreso(req, res) {
     let FECHA_INGRESO = req.params.FECHA_INGRESO;
-    ingresoBD.metodos.getingreso(FECHA_INGRESO, () => {
+    ingresomodel.metodos.getingreso(FECHA_INGRESO, () => {
         (err, exito) => {
             if (err) {
                 res.status(500).send(err)
@@ -78,14 +73,14 @@ function obteneringreso(req, res) {
     });
 }
 
-//app.put("/:FECHA_INGRESO", modificaringreso);
+//router.put("/:FECHA_INGRESO", modificaringreso);
 
 
 
 function modificaringreso(req, res) {
     datosingreso = req.body;
     deEsteingreso = req.params.FECHA_INGRESO;
-    ingresoBD.metodos.update(datosingreso, deEsteingreso, (err, exito) => {
+    ingresomodel.metodos.update(datosingreso, deEsteingreso, (err, exito) => {
         if (err) {
             res.status(500).send(err)
         } else {
@@ -95,8 +90,8 @@ function modificaringreso(req, res) {
 }
 
 
-function eliminarMedico(req, res) {
-    medicoBD.metodos.deleteMedico(req.params.matricula, (err, exito) => {
+function eliminaringreso(req, res) {
+    ingresomodel.metodos.deleteMedico(req.params.matricula, (err, exito) => {
         if (err) {
             res.status(500).json(err);
         } else {
@@ -106,4 +101,4 @@ function eliminarMedico(req, res) {
 }
 
 //exportamos app que es nuestro servidor express a la cual se le agregaron endpoinds de escucha
-module.exports = app;
+module.exports = router;
