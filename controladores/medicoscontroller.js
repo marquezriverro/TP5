@@ -54,7 +54,7 @@ function listarTodo(req, res) {
 }
 
 function crear(req, res) {
-    medicoBD.metodos.crearMedico(req.body, (err, exito) => {
+    medicos.metodos.crearMedico(req.body, (err, exito) => {
         if (err) {
             res.send(err);
         } else {
@@ -66,7 +66,7 @@ function crear(req, res) {
 
 function obtenerMedico(req, res) {
     let matricula = req.params.matricula;
-    medicoBD.metodos.getMedico(matricula, () => {
+    medicos.metodos.getMedico(matricula, () => {
         (err, exito) => {
             if (err) {
                 res.status(500).send(err)
@@ -82,9 +82,9 @@ function obtenerMedico(req, res) {
 
 
 function modificarMedico(req, res) {
-    datosMedico = req.body;
-    deEsteMedico = req.params.matricula;
-    medicoBD.metodos.update(datosMedico, deEsteMedico, (err, exito) => {
+    datosMedicos = req.body;
+    deEsteMedicos = req.params.matricula;
+    medicos.metodos.update(datosMedico, deEsteMedico, (err, exito) => {
         if (err) {
             res.status(500).send(err)
         } else {
@@ -95,7 +95,7 @@ function modificarMedico(req, res) {
 
 
 function eliminarMedico(req, res) {
-    medicoBD.metodos.deleteMedico(req.params.matricula, (err, exito) => {
+    medicos.metodos.deleteMedico(req.params.matricula, (err, exito) => {
         if (err) {
             res.status(500).json(err);
         } else {
